@@ -14,4 +14,7 @@ cd cesta/ke/slozce/se/soubory
 ## Problémy s daty
 
 * Mezery v názvech sloupců
-* Data neobsahují sankce za rok 2013?
+
+## Licence
+
+Užívání dat se řídí [licencí České obchodní inspekce](http://www.coi.cz/cz/spotrebitel/open-data-databaze-kontrol-sankci-a-zakazu/open-data-licence/).
