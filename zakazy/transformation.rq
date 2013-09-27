@@ -1,0 +1,74 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX ex:      <http://example.com/>
+PREFIX gr:      <http://purl.org/goodrelations/v1#>
+PREFIX lex:     <http://purl.org/lex#>
+PREFIX metalex: <http://www.metalex.eu/metalex/1.0#> 
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX void:    <http://rdfs.org/ns/void#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?ban a ex:Ban ;
+    metalex:cites ?act ;
+    skos:related ?inspection ;
+    gr:includesObject ?typeAndQuantityNode ;
+    gr:hasPriceSpecification ?priceSpecification ;
+    void:inDataset ?dataset
+    .
+
+  ?typeAndQuantityNode a gr:TypeAndQuantityNode ;
+    gr:typeOfGood ?someItems ;
+    gr:hasUnitOfMeasurement ?unit ; 
+    gr:amountOfThisGood ?amount
+    .
+  
+  ?someItems a gr:SomeItems ;
+    gr:category ?category
+    .
+
+  ?act a lex:Act ;
+    dcterms:description ?Dle_zakona
+    .
+
+  ?priceSpecification a gr:PriceSpecification ;
+    gr:hasCurrency "CZK" ;
+    gr:hasCurrencyValue ?banValue
+    .
+}
+WHERE {
+  # Base URI
+  BIND ("http://linked.opendata.cz/resource/coi.cz/" AS ?baseUri)
+  
+  # Static URIs
+  BIND (URI("http://www.coi.cz/") AS ?coi)
+  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/zakazy")) AS ?dataset)
+  
+  # Mint per-row URIs
+  BIND (URI(CONCAT(?baseUri, "coi.cz/ban/", ENCODE_FOR_URI(?ID_Sankce))) AS ?ban)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
+  BIND (URI(CONCAT(
+    ?baseUri,
+    "coi.cz/price-specification/",
+    SHA1(CONCAT(?ID_kontroly, ?Cena_celkem))
+  )) AS ?priceSpecification)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/type-and-quantity-node/", STRUUID())) AS ?typeAndQuantityNode)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/some-items/", SHA1(?Sortiment))) AS ?someItems)
+
+  BIND (URI(CONCAT(?baseUri, "coi.cz/act/", SHA1(?Dle_zakona))) AS ?act) 
+   
+  # Datatyped literals
+  BIND (STRDT(?Cena_celkem, xsd:decimal) AS ?banValue)
+  BIND (STRDT(?Mnozstvi, xsd:decimal) AS ?amount)
+  
+  # Translation to UN/CEFACT unit codes
+  VALUES (?Jednotka   ?unit) {
+         ("kilogram"  "KGM")
+         ("kus"       "C62")
+         ("litr"      "LTR")
+  }
+  
+  # Language-tagged literals
+  BIND (STRLANG(?Sortiment, "cs") AS ?category)
+}
+OFFSET 1

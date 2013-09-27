@@ -1,0 +1,110 @@
+PREFIX adms:    <http://www.w3.org/ns/adms#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX gr:      <http://purl.org/goodrelations/v1#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX schema:  <http://schema.org/>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX void:    <http://rdfs.org/ns/void#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?inspection a schema:CheckAction ;
+    skos:notation ?ID_kontroly ;
+    dcterms:date ?inspectionDate ;
+    schema:agent ?coi ;
+    schema:object ?businessEntity ;
+    void:inDataset ?dataset 
+    .
+
+  ?businessEntity a gr:BusinessEntity ;
+    adms:identifier ?identifier ;
+    schema:address ?address ;
+    schema:location ?locationNUTS3, ?locationNUTS4, ?locationNUTS5
+    .
+  
+  ?identifier a adms:Identifier ;
+    skos:notation ?IC_subjektu ;
+    skos:inScheme ?icoScheme 
+    .
+
+  ?address a schema:PostalAddress ;
+    schema:addressRegion ?Kraj ;
+    schema:streetAddress ?streetAddress ;
+    schema:addressLocality ?Obec ;
+    schema:postalCode ?PSC
+    .
+}
+WHERE {
+  # Base URI
+  BIND ("http://linked.opendata.cz/resource/" AS ?baseUri)
+  
+  # Static URIs
+  BIND (URI("http://www.coi.cz/") AS ?coi)
+  BIND (URI(CONCAT(?baseUri, "concept-scheme/CZ-ICO")) AS ?icoScheme)
+  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/kontroly")) AS ?dataset)
+  
+  # Mint per-row URIs
+  BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/business-entity/", ENCODE_FOR_URI(?IC_subjektu))) AS ?businessEntity)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/identifier/", ENCODE_FOR_URI(?IC_subjektu))) AS ?identifier)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/postal-address", SHA1(CONCAT(
+    ?Kraj,
+    ?Okres,
+    ?Obec,
+    ?Ulice,
+    ?PSC,
+    ?C_popisne,
+    ?C_orientacni
+  )))) AS ?address)
+  BIND (URI(CONCAT(
+    "http://linked.opendata.cz/resource/region/",
+    ENCODE_FOR_URI(?NUTS_5)
+  )) AS ?locationNUTS5)
+  # ?locationNUTS4 and ?locationNUTS4 are unnecessary as they may be retrieved from data
+  # linked via ?locationNUTS5
+  BIND (URI(CONCAT(
+    "http://ec.europa.eu/eurostat/ramon/rdfdata/nuts2008/",
+    ENCODE_FOR_URI(?NUTS_3)
+  )) AS ?locationNUTS3)
+  BIND (URI(CONCAT(
+    "http://linked.opendata.cz/resource/region/",
+    ENCODE_FOR_URI(?NUTS_4)
+  )) AS ?locationNUTS4)
+   
+  # Datatyped literals
+  BIND (REPLACE(
+    ?Datum_kontroly,
+    "^(\\d{1,2}).*$",
+    "$1"
+  ) AS ?inspectionMonth)
+  BIND (REPLACE(
+    ?Datum_kontroly,
+    "^(\\d{1,2})/(\\d{1,2}).*$",
+    "$2"
+  ) AS ?inspectionDay)
+  BIND (REPLACE(
+    ?Datum_kontroly,
+    "^(\\d{1,2})/(\\d{1,2})/(\\d{4})$",
+    "$3"
+  ) AS ?inspectionYear)
+  BIND (STRDT(CONCAT(
+    ?inspectionYear,
+    "-",
+    IF(STRLEN(?inspectionMonth) < 2, CONCAT("0", ?inspectionMonth), ?inspectionMonth),
+    "-",
+    IF(STRLEN(?inspectionDay) < 2, CONCAT("0", ?inspectionDay), ?inspectionDay)
+  ), xsd:date) AS ?inspectionDate) 
+  
+  BIND (CONCAT(?Ulice, IF(
+    BOUND(?C_popisne) && BOUND(?C_orientacni),
+    CONCAT(" ", ?C_popisne, "/", ?C_orientacni),
+    IF(
+      BOUND(?C_popisne),
+      CONCAT(" ", ?C_popisne),
+      ""
+  ))) AS ?streetAddress)
+
+  # Unused bindings: 
+  # ?Okres
+}
+OFFSET 1

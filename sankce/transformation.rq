@@ -1,0 +1,72 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX ex:      <http://example.com/>
+PREFIX gr:      <http://purl.org/goodrelations/v1#>
+PREFIX lex:     <http://purl.org/lex#>
+PREFIX metalex: <http://www.metalex.eu/metalex/1.0#> 
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX void:    <http://rdfs.org/ns/void#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+  ?sanction a ex:Sanction ; # We might not need any type
+    skos:notation ?ID_Sankce ;
+    dcterms:valid ?effectiveDate ;
+    ex:inspection ?inspection ;
+    ex:fine ?fine ;
+    metalex:cites ?paragraph ;
+    void:inDataset ?dataset
+    .
+
+  ?fine a gr:PriceSpecification ;
+    gr:hasCurrencyValue ?sanctionValue ;
+    gr:hasCurrency "CZK"
+    .
+
+  ?act a lex:Act ;
+    dcterms:title ?Zákon
+    .
+
+  ?paragraph dcterms:isPartOf ?act .
+}
+WHERE {
+  # Base URI
+  BIND ("http://linked.opendata.cz/resource/" AS ?baseUri)
+  
+  # Static URIs
+  BIND (URI("http://www.coi.cz/") AS ?coi)
+  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/sankce")) AS ?dataset)
+  
+  # Mint per-row URIs
+  BIND (URI(CONCAT(?baseUri, "coi.cz/sanction/", ENCODE_FOR_URI(?ID_Sankce))) AS ?sanction)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/price-specification/", SHA1(CONCAT(?ID_Sankce, ?Vyse_pokuty)))) AS ?fine)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/act/", SHA1(?Zákon))) AS ?act)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/paragraph/", SHA1(CONCAT(?Zákon, ?Paragraf)))) AS ?paragraph)
+   
+  # Datatyped literals
+  BIND (REPLACE(
+    ?Datum_nabyti_Pravni_Moci,
+    "^(\\d{1,2}).*$",
+    "$1"
+  ) AS ?effectiveDateMonth)
+  BIND (REPLACE(
+    ?Datum_nabyti_Pravni_Moci,
+    "^(\\d{1,2})/(\\d{1,2}).*$",
+    "$2"
+  ) AS ?effectiveDateDay)
+  BIND (REPLACE(
+    ?Datum_nabyti_Pravni_Moci,
+    "^(\\d{1,2})/(\\d{1,2})/(\\d{4})$",
+    "$3"
+  ) AS ?effectiveDateYear)
+  BIND (STRDT(CONCAT(
+    ?effectiveDateYear,
+    "-",
+    IF(STRLEN(?effectiveDataMonth) < 2, CONCAT("0", ?effectiveDateMonth), ?effectiveDateMonth),
+    "-",
+    IF(STRLEN(?effectiveDateDay) < 2, CONCAT("0", ?effectiveDateDay), ?effectiveDateDay)
+  ), xsd:date) AS ?effectiveDate)
+  BIND (STRDT(?Vyse_pokuty, xsd:decimal) AS ?sanctionValue)
+}
+OFFSET 1
