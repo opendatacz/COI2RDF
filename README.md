@@ -7,7 +7,8 @@ Tarql jako svůj vstup bere CSV soubor a SPARQL mapování (v souboru `transform
 
 ```
 export TARQL_HOME=/cesta/k/tarql/
-$ ../convert.sh soubor.csv
+cd cesta/ke/slozce/se/soubory
+../convert.sh soubor.csv
 ```
 
 ## Problémy s daty
