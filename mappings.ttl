@@ -1,0 +1,7 @@
+@prefix gr:   <http://purl.org/goodrelations/v1#> .
+@prefix odcz: <http://linked.opendata.cz/ontology/coi.cz/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+odcz:Sanction skos:relatedMatch <http://dbpedia.org/resource/Punishment> .
+odcz:Ban skos:closeMatch <http://dbpedia.org/resource/Ban_(law)> .
+odcz:Fine rdfs:subClassOf gr:PriceSpecification .
