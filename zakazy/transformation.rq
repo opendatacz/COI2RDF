@@ -1,15 +1,15 @@
 PREFIX dcterms: <http://purl.org/dc/terms/>
-PREFIX ex:      <http://example.com/>
 PREFIX gr:      <http://purl.org/goodrelations/v1#>
 PREFIX lex:     <http://purl.org/lex#>
 PREFIX metalex: <http://www.metalex.eu/metalex/1.0#> 
+PREFIX odcz:    <http://linked.opendata.cz/ontology/coi.cz/>
 PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX schema:  <http://schema.org/>
 PREFIX void:    <http://rdfs.org/ns/void#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
-  ?ban a ex:Ban ;
+  ?ban a odcz:Ban ;
     metalex:cites ?act ;
     gr:includesObject ?typeAndQuantityNode ;
     gr:hasPriceSpecification ?priceSpecification ;
@@ -32,7 +32,7 @@ CONSTRUCT {
     dcterms:description ?Dle_zakona
     .
 
-  ?priceSpecification a gr:PriceSpecification ;
+  ?priceSpecification a odcz:Fine ;
     gr:hasCurrency "CZK" ;
     gr:hasCurrencyValue ?banValue
     .
