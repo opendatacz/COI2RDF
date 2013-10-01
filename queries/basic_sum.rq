@@ -1,21 +1,23 @@
+# SPARQL endpoint: http://lod2-dev.vse.cz:8890/sparql
+
 PREFIX dcterms: <http://purl.org/dc/terms/>
-PREFIX ex:      <http://example.com/>
 PREFIX gr:      <http://purl.org/goodrelations/v1#>
+PREFIX odcz:    <http://linked.opendata.cz/ontology/coi.cz/> 
 PREFIX schema:  <http://schema.org/>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?businessEntity (SUM(?fine) AS ?fineTotal)
-FROM <http://linked.opendata.cz/resource/dataset/coi.cz/zakazy>
-FROM <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly>
-FROM <http://linked.opendata.cz/resource/dataset/coi.cz/sankce>
 WHERE {
-  [] ex:inspection [
-      schema:object ?businessEntity
-    ] ;
-    ex:fine [
-      gr:hasCurrencyValue ?fine
-    ] .
-  # FILTER (xsd:dateTime(?date) > xsd:dateTime("2012-01-01"))
+  GRAPH <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly-sankce-zakazy> {
+    [] a schema:CheckAction ;
+      dcterms:date ?date ;
+      schema:object ?businessEntity ;
+      schema:result [
+        a odcz:Fine ;
+        gr:hasCurrencyValue ?fine 
+      ] .
+    FILTER (xsd:dateTime(?date) > xsd:dateTime("2012-01-01"))
+  }
 }
 GROUP BY ?businessEntity
 ORDER BY DESC(?fineTotal)
