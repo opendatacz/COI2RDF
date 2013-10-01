@@ -1,6 +1,6 @@
 # Created by http://gitignore.io
 
-*.ttl
+*/*.ttl
 *.gz
 seed.sh
 

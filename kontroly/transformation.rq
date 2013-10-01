@@ -41,7 +41,7 @@ WHERE {
   # Static URIs
   BIND (URI("http://www.coi.cz/") AS ?coi)
   BIND (URI(CONCAT(?baseUri, "concept-scheme/CZ-ICO")) AS ?icoScheme)
-  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/kontroly")) AS ?dataset)
+  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/kontroly-sankce-zakazy")) AS ?dataset)
   
   # Mint per-row URIs
   BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
