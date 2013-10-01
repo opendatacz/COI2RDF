@@ -38,7 +38,7 @@ CONSTRUCT {
 }
 WHERE {
   # Base URI
-  BIND ("http://linked.opendata.cz/resource/coi.cz/" AS ?baseUri)
+  BIND ("http://linked.opendata.cz/resource/" AS ?baseUri)
   
   # Static URIs
   BIND (URI("http://www.coi.cz/") AS ?coi)
