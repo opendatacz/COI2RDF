@@ -4,7 +4,7 @@
 <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly-sankce-zakazy> a void:Dataset ;
   dcterms:title "Kontroly, sankce a zákazy ČOI"@cs ;
   dcterms:creator "Česká obchodní inspekce"@cs ;
-  dcterms:contributor <http://opendata.cz> ;
+  dcterms:contributor <http://opendata.cz> ; 
   dcterms:description "Přehled základních informací o všech kontrolách, které inspektoři České obchodní inspekce provedli od 1. 1. 2012., včetně informací o veškerých pravomocných pokutách uložených na základě těchto kontrol a seznamu výrobků, jejichž prodej byl při těchto kontrolách zakázán, ať již z důvodu rozporů s technickými normami či dalšími předpisy, nebo pro porušení některých práv duševního vlastnictví."@cs ;
   dcterms:source <http://www.coi.cz/userdata/files/dokumenty-ke-stazeni/open-data/zakazy.xls>,
     <http://www.coi.cz/userdata/files/dokumenty-ke-stazeni/open-data/kontroly.xls>,
