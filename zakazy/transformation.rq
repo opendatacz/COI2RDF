@@ -4,19 +4,20 @@ PREFIX gr:      <http://purl.org/goodrelations/v1#>
 PREFIX lex:     <http://purl.org/lex#>
 PREFIX metalex: <http://www.metalex.eu/metalex/1.0#> 
 PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX skos:    <http://www.w3.org/2004/02/skos/core#>
+PREFIX schema:  <http://schema.org/>
 PREFIX void:    <http://rdfs.org/ns/void#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
   ?ban a ex:Ban ;
     metalex:cites ?act ;
-    skos:related ?inspection ;
     gr:includesObject ?typeAndQuantityNode ;
     gr:hasPriceSpecification ?priceSpecification ;
     void:inDataset ?dataset
     .
 
+  ?inspection schema:result ?ban .
+  
   ?typeAndQuantityNode a gr:TypeAndQuantityNode ;
     gr:typeOfGood ?someItems ;
     gr:hasUnitOfMeasurement ?unit ; 
