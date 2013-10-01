@@ -13,12 +13,11 @@ CONSTRUCT {
   ?sanction a ex:Sanction ; # We might not need any type
     skos:notation ?ID_Sankce ;
     dcterms:valid ?effectiveDate ;
-    ex:fine ?fine ;
     metalex:cites ?paragraph ;
     void:inDataset ?dataset
     .
 
-  ?inspection schema:result ?sanction .
+  ?inspection schema:result ?sanction, ?fine .
 
   ?fine a gr:PriceSpecification ;
     gr:hasCurrencyValue ?sanctionValue ;
