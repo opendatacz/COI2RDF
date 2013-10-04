@@ -12,14 +12,13 @@ CONSTRUCT {
     skos:notation ?ID_kontroly ;
     dcterms:date ?inspectionDate ;
     schema:agent ?coi ;
+    schema:location ?address, ?locationNUTS3, ?locationNUTS4, ?locationNUTS5 ;
     schema:object ?businessEntity ;
     void:inDataset ?dataset 
     .
 
   ?businessEntity a gr:BusinessEntity ;
     adms:identifier ?identifier ;
-    schema:address ?address ;
-    schema:location ?locationNUTS3, ?locationNUTS4, ?locationNUTS5
     .
   
   ?identifier a adms:Identifier ;
