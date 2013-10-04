@@ -94,16 +94,19 @@ WHERE {
     "-",
     IF(STRLEN(?inspectionDay) < 2, CONCAT("0", ?inspectionDay), ?inspectionDay)
   ), xsd:date) AS ?inspectionDate) 
-  
+
   BIND (CONCAT(?Ulice, IF(
-    BOUND(?C_popisne) && BOUND(?C_orientacni),
+    BOUND(?C_popisne) && ?C_popisne != "0" && BOUND(?C_orientacni),
     CONCAT(" ", ?C_popisne, "/", ?C_orientacni),
     IF(
-      BOUND(?C_popisne),
+      BOUND(?C_popisne) && ?C_popisne != "0",
       CONCAT(" ", ?C_popisne),
-      ""
-  ))) AS ?streetAddress)
-
+      IF(
+        BOUND(?C_orientacni),
+    CONCAT(" ", ?C_orientacni),
+    ""
+  )))) AS ?streetAddress)  
+  
   # Unused bindings: 
   # ?Okres
 }
