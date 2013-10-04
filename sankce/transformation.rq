@@ -14,10 +14,11 @@ CONSTRUCT {
     skos:notation ?ID_Sankce ;
     dcterms:valid ?effectiveDate ;
     metalex:cites ?paragraph ;
-    void:inDataset ?dataset
+    void:inDataset ?dataset ;
+    schema:result ?fine
     .
 
-  ?inspection schema:result ?sanction, ?fine .
+  ?inspection schema:result ?sanction .
 
   ?fine a odcz:Fine ;
     gr:hasCurrencyValue ?sanctionValue ;
