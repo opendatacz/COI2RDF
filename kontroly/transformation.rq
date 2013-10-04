@@ -42,11 +42,12 @@ WHERE {
   BIND (URI("http://www.coi.cz/") AS ?coi)
   BIND (URI(CONCAT(?baseUri, "concept-scheme/CZ-ICO")) AS ?icoScheme)
   BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/kontroly-sankce-zakazy")) AS ?dataset)
+  BIND (CONCAT("CZ", ?IC_subjektu) AS ?DIC)
   
   # Mint per-row URIs
   BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
-  BIND (URI(CONCAT(?baseUri, "business-entity/", ENCODE_FOR_URI(?IC_subjektu))) AS ?businessEntity)
-  BIND (URI(CONCAT(?baseUri, "coi.cz/identifier/", ENCODE_FOR_URI(?IC_subjektu))) AS ?identifier)
+  BIND (URI(CONCAT(?baseUri, "business-entity/", ENCODE_FOR_URI(?DIC))) AS ?businessEntity)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/identifier/", ENCODE_FOR_URI(?DIC))) AS ?identifier)
   BIND (URI(CONCAT(?baseUri, "coi.cz/postal-address", SHA1(CONCAT(
     ?Kraj,
     ?Okres,
