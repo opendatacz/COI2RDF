@@ -12,17 +12,17 @@ CONSTRUCT {
     skos:notation ?ID_kontroly ;
     dcterms:date ?inspectionDate ;
     schema:agent ?coi ;
-    schema:location ?address, ?locationNUTS3, ?locationNUTS4, ?locationNUTS5 ;
     schema:object ?businessEntity ;
-    void:inDataset ?dataset 
-    .
+    void:inDataset ?dataset ;
+    schema:location ?address ;
+	.
 
   ?businessEntity a gr:BusinessEntity ;
     adms:identifier ?identifier ;
     .
   
   ?identifier a adms:Identifier ;
-    skos:notation ?IC_subjektu ;
+    skos:notation ?IC ;
     skos:inScheme ?icoScheme 
     .
 
@@ -30,32 +30,36 @@ CONSTRUCT {
     schema:addressRegion ?Kraj ;
     schema:streetAddress ?streetAddress ;
     schema:addressLocality ?Obec ;
-    schema:postalCode ?PSC
+    schema:postalCode ?PSC ;
+    schema:location ?locationNUTS3, ?locationNUTS4, ?locationNUTS5 ;
     .
 }
 WHERE {
   # Base URI
-  BIND ("http://linked.opendata.cz/resource/" AS ?baseUri)
+  BIND ("http://linked.opendata.cz/resource/" AS ?ODbaseUri)
+  BIND (CONCAT(?ODbaseUri, "domain/") AS ?baseUri)
   
   # Static URIs
   BIND (URI("http://www.coi.cz/") AS ?coi)
   BIND (URI(CONCAT(?baseUri, "concept-scheme/CZ-ICO")) AS ?icoScheme)
-  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/kontroly-sankce-zakazy")) AS ?dataset)
-  BIND (CONCAT("CZ", ?IC_subjektu) AS ?DIC)
+  BIND (URI(CONCAT(?ODbaseUri, "dataset/coi.cz/kontroly-sankce-zakazy")) AS ?dataset)
   
   # Mint per-row URIs
+  
+  BIND ( CONCAT(
+	IF(STRLEN(?IC_subjektu)=7, "0",""),
+	IF(STRLEN(?IC_subjektu)=6, "00",""),
+	IF(STRLEN(?IC_subjektu)=5, "000",""),
+	IF(STRLEN(?IC_subjektu)=4, "0000",""),
+	IF(STRLEN(?IC_subjektu)=3, "00000",""),
+	IF(STRLEN(?IC_subjektu)=2, "000000",""),
+	?IC_subjektu
+	) as ?IC)
+	
   BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
-  BIND (URI(CONCAT(?baseUri, "business-entity/", ENCODE_FOR_URI(?DIC))) AS ?businessEntity)
-  BIND (URI(CONCAT(?baseUri, "coi.cz/identifier/", ENCODE_FOR_URI(?DIC))) AS ?identifier)
-  BIND (URI(CONCAT(?baseUri, "coi.cz/postal-address", SHA1(CONCAT(
-    ?Kraj,
-    ?Okres,
-    ?Obec,
-    ?Ulice,
-    ?PSC,
-    ?C_popisne,
-    ?C_orientacni
-  )))) AS ?address)
+  BIND (URI(CONCAT(?ODbaseUri, "business-entity/CZ", ENCODE_FOR_URI(?IC))) AS ?businessEntity)
+  BIND (URI(CONCAT(?ODbaseUri, "business-entity/CZ", ENCODE_FOR_URI(?IC), "/identifier/", ENCODE_FOR_URI(?IC))) AS ?identifier)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly), "/postal-address")) AS ?address)
   BIND (URI(CONCAT(
     "http://linked.opendata.cz/resource/region/",
     ENCODE_FOR_URI(?NUTS_5)
@@ -70,7 +74,7 @@ WHERE {
     "http://linked.opendata.cz/resource/region/",
     ENCODE_FOR_URI(?NUTS_4)
   )) AS ?locationNUTS4)
-   
+  
   # Datatyped literals
   BIND (REPLACE(
     ?Datum_kontroly,

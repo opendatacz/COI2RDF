@@ -13,7 +13,8 @@ CONSTRUCT {
   ?sanction a odcz:Sanction ; 
     skos:notation ?ID_Sankce ;
     dcterms:valid ?effectiveDate ;
-    metalex:cites ?paragraph ;
+	odcz:zakon ?Zákon ;
+    odcz:paragraf ?Paragraf ;
     void:inDataset ?dataset ;
     schema:result ?fine
     .
@@ -25,26 +26,19 @@ CONSTRUCT {
     gr:hasCurrency "CZK"
     .
 
-  ?act a lex:Act ;
-    dcterms:title ?Zákon
-    .
-
-  ?paragraph dcterms:isPartOf ?act .
 }
 WHERE {
   # Base URI
-  BIND ("http://linked.opendata.cz/resource/" AS ?baseUri)
+  BIND ("http://linked.opendata.cz/resource/domain/" AS ?baseUri)
   
   # Static URIs
   BIND (URI("http://www.coi.cz/") AS ?coi)
-  BIND (URI(CONCAT(?baseUri, "dataset/coi.cz/kontroly-sankce-zakazy")) AS ?dataset)
+  BIND (URI("http://linked.opendata.cz/resource/dataset/coi.cz/kontroly-sankce-zakazy") AS ?dataset)
   
   # Mint per-row URIs
   BIND (URI(CONCAT(?baseUri, "coi.cz/sanction/", ENCODE_FOR_URI(?ID_Sankce))) AS ?sanction)
   BIND (URI(CONCAT(?baseUri, "coi.cz/check-action/", ENCODE_FOR_URI(?ID_kontroly))) AS ?inspection)
-  BIND (URI(CONCAT(?baseUri, "coi.cz/price-specification/", SHA1(CONCAT(?ID_Sankce, ?Vyse_pokuty)))) AS ?fine)
-  BIND (URI(CONCAT(?baseUri, "coi.cz/act/", SHA1(?Zákon))) AS ?act)
-  BIND (URI(CONCAT(?baseUri, "coi.cz/paragraph/", SHA1(CONCAT(?Zákon, ?Paragraf)))) AS ?paragraph)
+  BIND (URI(CONCAT(?baseUri, "coi.cz/sanction/", ENCODE_FOR_URI(?ID_Sankce) ,"/price-specification")) AS ?fine)
    
   # Datatyped literals
   BIND (REPLACE(
@@ -65,7 +59,7 @@ WHERE {
   BIND (STRDT(CONCAT(
     ?effectiveDateYear,
     "-",
-    IF(STRLEN(?effectiveDataMonth) < 2, CONCAT("0", ?effectiveDateMonth), ?effectiveDateMonth),
+    IF(STRLEN(?effectiveDateMonth) < 2, CONCAT("0", ?effectiveDateMonth), ?effectiveDateMonth),
     "-",
     IF(STRLEN(?effectiveDateDay) < 2, CONCAT("0", ?effectiveDateDay), ?effectiveDateDay)
   ), xsd:date) AS ?effectiveDate)
