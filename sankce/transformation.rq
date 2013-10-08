@@ -13,7 +13,7 @@ CONSTRUCT {
   ?sanction a odcz:Sanction ; 
     skos:notation ?ID_Sankce ;
     dcterms:valid ?effectiveDate ;
-	odcz:zakon ?Zákon ;
+    odcz:zakon ?Zákon ;
     odcz:paragraf ?Paragraf ;
     void:inDataset ?dataset ;
     schema:result ?fine
@@ -25,7 +25,6 @@ CONSTRUCT {
     gr:hasCurrencyValue ?sanctionValue ;
     gr:hasCurrency "CZK"
     .
-
 }
 WHERE {
   # Base URI

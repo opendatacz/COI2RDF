@@ -15,7 +15,7 @@ CONSTRUCT {
     gr:includesObject ?typeAndQuantityNode ;
     gr:hasPriceSpecification ?priceSpecification ;
     void:inDataset ?dataset ;
-	skos:notation ?ID_zakazu ;
+    skos:notation ?ID_zakazu
     .
 
   ?inspection schema:result ?ban .
