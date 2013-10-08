@@ -4,7 +4,7 @@
 
 <http://linked.opendata.cz/resource/dataset/coi.cz/kontroly-sankce-zakazy> a void:Dataset ;
   dcterms:title "Kontroly, sankce a zákazy ČOI"@cs, "Inspections, sanctions and bans of CTIA"@en ;
-  dcterms:creator <http://purl.org/klimek#me>, <http://isis.vse.cz/lide/clovek.pl?id=90480#me> ;
+  dcterms:creator <http://purl.org/klimek#me>, <http://mynarz.net/#jindrich> ;
   dcterms:contributor <http://opendata.cz> ; 
   dcterms:description "Přehled základních informací o všech kontrolách, které inspektoři České obchodní inspekce provedli od 1. 1. 2012., včetně informací o veškerých pravomocných pokutách uložených na základě těchto kontrol a seznamu výrobků, jejichž prodej byl při těchto kontrolách zakázán, ať již z důvodu rozporů s technickými normami či dalšími předpisy, nebo pro porušení některých práv duševního vlastnictví."@cs ;
   dcterms:source <http://www.coi.cz/userdata/files/dokumenty-ke-stazeni/open-data/zakazy.xls>,
@@ -15,5 +15,5 @@
   void:sparqlEndpoint <http://linked.opendata.cz/sparql> ;
   void:dataDump <http://linked.opendata.cz/dump/coi.cz.zip> ;
   dcterms:publisher <http://opendata.cz> ;
-  dcterms:modifier "2013-10-08"^^xsd:date ;
+  dcterms:modified "2013-10-08"^^xsd:date
   .
