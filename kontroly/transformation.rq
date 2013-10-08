@@ -23,6 +23,7 @@ CONSTRUCT {
   
   ?identifier a adms:Identifier ;
     skos:notation ?IC ;
+	adms:schemeAgency "Český statistický úřad" ;
     skos:inScheme ?icoScheme 
     .
 
@@ -41,7 +42,7 @@ WHERE {
   
   # Static URIs
   BIND (URI("http://www.coi.cz/") AS ?coi)
-  BIND (URI(CONCAT(?baseUri, "concept-scheme/CZ-ICO")) AS ?icoScheme)
+  BIND (URI(CONCAT(?ODbaseUri, "concept-scheme/CZ-ICO")) AS ?icoScheme)
   BIND (URI(CONCAT(?ODbaseUri, "dataset/coi.cz/kontroly-sankce-zakazy")) AS ?dataset)
   
   # Mint per-row URIs
