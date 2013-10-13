@@ -1,4 +1,4 @@
-# SPARQL endpoint: http://lod2-dev.vse.cz:8890/sparql
+# SPARQL endpoint: http://linked.opendata.cz/sparql
 
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX gr:      <http://purl.org/goodrelations/v1#>
@@ -13,8 +13,11 @@ WHERE {
       dcterms:date ?date ;
       schema:object ?businessEntity ;
       schema:result [
-        a odcz:Fine ;
-        gr:hasCurrencyValue ?fine 
+        a odcz:Sanction ;
+        schema:result [
+          a odcz:Fine ;
+          gr:hasCurrencyValue ?fine
+        ]
       ] .
     FILTER (xsd:dateTime(?date) > xsd:dateTime("2012-01-01"))
   }
